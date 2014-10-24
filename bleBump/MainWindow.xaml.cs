@@ -135,9 +135,25 @@ namespace bleBump
 				{
 					using (StreamReader sr = new StreamReader(Directory.GetCurrentDirectory() + "\\test.txt"))
 					{
+						char[] delimiterChars = { ':', '.' };
+
 						while (sr.Peek() >= 0)
 						{
-							logFile += sr.ReadLine() + "\n";
+							string line = sr.ReadLine() + "\n";
+							if (line != "\n")
+							{
+								if (line != "" && line[0] != '-')
+								{
+									line = line.Remove(0, 6);
+									int spaceIdx = line.IndexOf(" ");
+									string datePart = line.Substring(0, spaceIdx + 1);
+									line = line.Remove(0, spaceIdx + 1);
+									string[] words = datePart.Split(delimiterChars);
+									DateTime time = new DateTime(1, 1, 1, int.Parse(words[0]), int.Parse(words[1]), int.Parse(words[2]), int.Parse(words[3]));
+									line = time.ToString() + " " + line;
+								}
+								logFile += line;
+							}
 						}
 					}
 				}
